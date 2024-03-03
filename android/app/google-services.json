@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "566260629003",
+    "project_id": "ceylonexplorer-96c46",
+    "storage_bucket": "ceylonexplorer-96c46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566260629003:android:71aff435ac42a34eeed10e",
+        "android_client_info": {
+          "package_name": "com.ceylon_explorer.ceylon_explorer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566260629003-g2m3cavhsn592v27uu647bm2976ajh2f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ceylon_explorer.ceylon_explorer",
+            "certificate_hash": "98328b2df647b6fdebae084354a2cc41d065c830"
+          }
+        },
+        {
+          "client_id": "566260629003-k8l5gcbdgl97lkipp4ub12ji5vevul6h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDCuQw25wDIDgrby_65OK-3Fz0LEu4Uys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566260629003-k8l5gcbdgl97lkipp4ub12ji5vevul6h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "566260629003-i2p2gj0go7ret16ojom327fqupok79r4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ceylonExplorer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566260629003:android:7d7b859ca0990326eed10e",
+        "android_client_info": {
+          "package_name": "com.example.ceylon_explorer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566260629003-k8l5gcbdgl97lkipp4ub12ji5vevul6h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDCuQw25wDIDgrby_65OK-3Fz0LEu4Uys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "566260629003-k8l5gcbdgl97lkipp4ub12ji5vevul6h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "566260629003-i2p2gj0go7ret16ojom327fqupok79r4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ceylonExplorer"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
