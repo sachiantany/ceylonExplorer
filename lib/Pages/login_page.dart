@@ -1,10 +1,13 @@
 import 'package:ceylon_explorer/Pages/register_page.dart';
+import 'package:ceylon_explorer/Traveler/detail_page.dart';
 import 'package:ceylon_explorer/misc/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import '../Guide/tour_guide.dart';
+import '../Admin/admin_main_page.dart';
+import '../Guide/guide_main_page.dart';
 import '../Traveler/main_page.dart';
 import 'google_page.dart';
 
@@ -307,7 +310,16 @@ class _LoginPageState extends State<LoginPage> {
               builder: (context) => MainPage(),
             ),
           );
-        } else {
+        }
+        else if (documentSnapshot.get('roll') == "admin") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdminMainPage(),
+            ),
+          );
+        }
+        else {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -315,7 +327,8 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         }
-      } else {
+      }
+      else {
         print('Document does not exist on the database');
       }
     });

@@ -20,7 +20,7 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   List images = [
     "welcome-one.png",
-    "login-background.png",
+    "welcome-two.png",
     "welcome-three.png",
   ];
   List title = [

@@ -1,22 +1,27 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../Pages/login_page.dart';
-import '../Pages/login_page.dart';
+import '../../Pages/login_page.dart';
+import '../../Traveler/Navpages/home_page.dart';
+import '../../misc/colors.dart';
+import '../../widgets/app_large_text.dart';
 
-class TourGuide extends StatefulWidget {
-  const TourGuide({super.key});
+class GuidePackage extends StatefulWidget {
+  const GuidePackage({super.key});
 
   @override
-  State<TourGuide> createState() => _TeacherState();
+  State<GuidePackage> createState() => _GuidePackageState();
 }
 
-class _TeacherState extends State<TourGuide> {
+class _GuidePackageState extends State<GuidePackage> {
+  get tabController => null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tour guide"),
+        title: Text("GuidePackage"),
         actions: [
           IconButton(
             onPressed: () {
@@ -28,6 +33,7 @@ class _TeacherState extends State<TourGuide> {
           )
         ],
       ),
+
     );
   }
 

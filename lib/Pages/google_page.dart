@@ -31,6 +31,7 @@ class _GoogleSignInScreenState extends State<GoogleSignInScreen> {
                       borderRadius: BorderRadius.circular(10)),
                   child: IconButton(
                     icon: Icon(Icons.login),
+                    color: Colors.green,
                     onPressed: () async {
                       userCredential.value = await signInWithGoogle();
                       if (userCredential.value != null)
