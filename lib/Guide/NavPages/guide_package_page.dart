@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:ceylon_explorer/Services/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,8 +29,6 @@ class _GuidePackageState extends State<GuidePackage> {
   get tabController => null;
 
   final FirestoreServices firestoreServices = FirestoreServices();
-
-  final TextEditingController textController = TextEditingController();
 
   final TextEditingController packageNameController = TextEditingController();
   final TextEditingController placeNameController = TextEditingController();
@@ -68,9 +67,14 @@ class _GuidePackageState extends State<GuidePackage> {
     placeNameController.clear();
     positionController.clear();
     priceController.clear();
+    tTypeController.clear();
+    vTypeController.clear();
+    tCountController.clear();
   }
 
   LatLng _selectedLocation = LatLng(7.094049, 80.022771);
+  // Create a GeoPoint object
+  GeoPoint geoPoint = GeoPoint(0, 0);
 
   static const _initialCameraPosition = CameraPosition(
     target: LatLng(7.094049, 80.022771),
@@ -83,27 +87,32 @@ class _GuidePackageState extends State<GuidePackage> {
   String? imageURL = '';
   XFile? imageFile;
 
-  // Callback function to handle tap on the map
-  // void _onMapTapped(LatLng latLng) {
-  //   setState(() {
-  //     _selectedLocation = latLng; // Update selected location
-  //     positionController.text = latLng.toString();
+  String? returnedURL;
 
-  //     markers.removeWhere((marker) => marker.markerId.value == 'marker1');
-  //     markers.add(
-  //       Marker(
-  //         markerId: MarkerId('marker1'),
-  //         position: latLng,
-  //         draggable: true,
-  //         onDragEnd: (newPosition) {
-  //           // Handle drag end event if needed
-  //         },
-  //       ),
-  //     );
-  //   });
-  // }
+  Future<String?> uploadAttachment(imageFiles) async {
+    String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+
+    //Get a reference to storage root
+    Reference referenceRoot = await FirebaseStorage.instance.ref();
+
+    Reference referenceDirImages = await referenceRoot.child('images');
+
+    //Create a reference for the image to be
+    Reference referenceImageToUpload =
+        await referenceDirImages.child(uniqueFileName);
+
+    try {
+      //Store the file
+      await referenceImageToUpload.putFile(File(imageFiles!.path));
+      String imageURL = await referenceImageToUpload.getDownloadURL();
+      print('url of image : ${imageURL}');
+
+      returnedURL = imageURL;
+    } catch (e) {}
+  }
 
   void openNoteBox({String? docID}) {
+    if (docID == null) _clearControllers();
     String? dropdownValue;
     String? vTypeValue;
 
@@ -143,6 +152,28 @@ class _GuidePackageState extends State<GuidePackage> {
                                 setState(() {
                                   _selectedLocation =
                                       latLng; // Update selected location
+
+//hhhhhhhhhh
+
+                                  // final regex =
+                                  //     RegExp(r'LatLng\(lat: (.*), lng: (.*)\)');
+                                  // final match =
+                                  //     regex.firstMatch(latLng.toString());
+                                  // if (match != null && match.groupCount == 2) {
+                                  //   final lat =
+                                  //       double.tryParse(match.group(1)!);
+                                  //   final lng =
+                                  //       double.tryParse(match.group(2)!);
+                                  //   if (lat != null && lng != null) {
+                                  //     positionController.text = '$lat,$lng';
+                                  //   }
+                                  // }
+                                  // Extract latitude and longitude from marker's position
+                                  double latitude = latlang.latitude;
+                                  double longitude = latlang.longitude;
+
+                                  // Create a GeoPoint object
+                                  geoPoint = GeoPoint(latitude, longitude);
                                   positionController.text = latLng.toString();
 
                                   markers.removeWhere((marker) =>
@@ -256,28 +287,7 @@ class _GuidePackageState extends State<GuidePackage> {
                     ),
 
                     _buildTextField("Travelers Count", tCountController),
-                    // _buildTextField("Photos", imageController),
-                    // Stack(
-                    //   alignment: AlignmentDirectional.topEnd,
-                    //   children: [
-                    //     Image.network(
-                    //       "https://firebasestorage.googleapis.com/v0/b/flutter-firebase-crud-7bd52.appspot.com/o/Screenshot%202024-03-08%20at%2014.08.02.png?alt=media&token=279f5748-88bd-40da-ba7b-1f1b934a0a52",
-                    //       width: 300,
-                    //       height: 200,
-                    //       fit: BoxFit.cover,
-                    //     ),
-                    //     IconButton(
-                    //       onPressed: () {
-                    //         setState(() {
-                    //           imageFile = null;
-                    //           imageController.clear(); // Clear the text field
-                    //         });
-                    //       },
-                    //       icon: Icon(Icons.delete),
-                    //       color: Colors.black,
-                    //     ),
-                    //   ],
-                    // ),
+
                     StatefulBuilder(builder: (context, setState) {
                       return Container(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -322,41 +332,11 @@ class _GuidePackageState extends State<GuidePackage> {
                                   print('${file?.path}');
 
                                   if (file == null) return;
-                                  String uniqueFileName = DateTime.now()
-                                      .millisecondsSinceEpoch
-                                      .toString();
 
-                                  //Get a reference to storage root
-                                  Reference referenceRoot =
-                                      FirebaseStorage.instance.ref();
-
-                                  Reference referenceDirImages =
-                                      referenceRoot.child('images');
-
-                                  //Create a reference for the image to be
-                                  Reference referenceImageToUpload =
-                                      referenceDirImages.child(uniqueFileName);
-
-                                  // setState(() {
-                                  //   imageFile = file;
-                                  //   this.imageURL = imageURL;
-                                  // });
-                                  try {
-                                    //Store the file
-                                    await referenceImageToUpload
-                                        .putFile(File(file.path));
-                                    String imageURL =
-                                        await referenceImageToUpload
-                                            .getDownloadURL();
-
-                                    setState(() {
-                                      imageFile = file;
-                                      imageController.text = imageURL;
-                                      this.imageURL = imageURL;
-                                    });
-                                  } catch (e) {
-                                    print(e);
-                                  }
+                                  setState(() {
+                                    imageFile = file;
+                                    // this.imageURL = imageURL;
+                                  });
                                 },
                                 icon: Icon(Icons.photo_album),
                               ),
@@ -367,28 +347,38 @@ class _GuidePackageState extends State<GuidePackage> {
               ),
               actions: [
                 ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (docID == null) {
-                        firestoreServices.addPackage(
-                            packageNameController.text,
-                            tTypeController.text,
-                            placeNameController.text,
-                            positionController.text,
-                            priceController.text,
-                            vTypeController.text,
-                            tCountController.text,
-                            imageController.text);
+                        await uploadAttachment(imageFile).then((value) => {
+                              firestoreServices.addPackage(
+                                  packageNameController.text,
+                                  tTypeController.text,
+                                  placeNameController.text,
+                                  geoPoint,
+                                  priceController.text,
+                                  vTypeController.text,
+                                  tCountController.text,
+                                  returnedURL!)
+                            });
+
+                        setState(() {
+                          // imageController.text = imageURL;
+                          this.imageURL = imageURL;
+                          imageFile = null;
+                        });
                       } else {
+                        await uploadAttachment(imageFile).toString();
+
                         firestoreServices.updatePackage(
                             docID,
                             packageNameController.text,
                             tTypeController.text,
                             placeNameController.text,
-                            positionController.text,
+                            geoPoint,
                             priceController.text,
                             vTypeController.text,
                             tCountController.text,
-                            imageController.text);
+                            returnedURL!);
                       }
 
                       _clearControllers();
@@ -441,11 +431,49 @@ class _GuidePackageState extends State<GuidePackage> {
                     String packageName = data['packageName'];
                     String packageId = data['packageId'];
                     String packagePrice = data['price'];
+                    String placeImage = data['images'];
+                    String packagePlaceName = data['placeName'];
+                    String packageTourType = data['tourType'];
+                    GeoPoint mapPosition = data['position'];
+                    LatLng packagePosition =
+                        LatLng(mapPosition.latitude, mapPosition.longitude);
+
+                    // LatLng packagePosition =
+                    //     LatLng(mapPosition.);
+
+                    //hhhhhhhhhhhh
+
+                    // final regex = RegExp(r'LatLng\(lat: (.*), lng: (.*)\)');
+                    // final match = regex.firstMatch(mapPosition);
+                    // if (match != null && match.groupCount == 2) {
+                    //   final lat = double.tryParse(match.group(1)!);
+                    //   final lng = double.tryParse(match.group(2)!);
+                    //   if (lat != null && lng != null) {
+                    //     // positionController.text = '$lat,$lng';
+                    //     setState(() {
+                    //       packagePosition = LatLng(lat, lng);
+                    //     });
+                    //   }
+                    // }
+
+                    String packageVehicalType = data['vehicalType'];
+                    String packageTCount = data['tCount'];
+                    String packageImages = data['images'];
 
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ListTile(
+                          leading: SizedBox(
+                            width: 60,
+                            height: 60,
+                            child: Image(
+                              image: NetworkImage(placeImage! ?? ""),
+                              // width: 30,
+                              // height: 30,
+                              // fit: BoxFit.cover,
+                            ),
+                          ),
                           title: Text(packageId),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -458,7 +486,21 @@ class _GuidePackageState extends State<GuidePackage> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                onPressed: () => openNoteBox(docID: docID),
+                                onPressed: () {
+                                  setState(() {
+                                    packageNameController.text = packageName;
+                                    placeNameController.text = packagePlaceName;
+                                    priceController.text = packagePrice;
+                                    // positionController.text = packagePosition;
+                                    tTypeController.text = packageTourType;
+                                    tCountController.text = packageTCount;
+                                    vTypeController.text = packageVehicalType;
+                                    _selectedLocation = packagePosition;
+// packageImages
+                                  });
+
+                                  openNoteBox(docID: docID);
+                                },
                                 icon: Icon(Icons.settings),
                               ),
                               IconButton(
