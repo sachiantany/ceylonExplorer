@@ -1,5 +1,6 @@
 import 'package:ceylon_explorer/Pages/login_page.dart';
 import 'package:ceylon_explorer/Services/firestore.dart';
+import 'package:ceylon_explorer/Traveler/Navpages/order_page.dart';
 import 'package:ceylon_explorer/Traveler/Navpages/package_booking.dart';
 import 'package:ceylon_explorer/misc/colors.dart';
 import 'package:ceylon_explorer/widgets/app_large_text.dart';
@@ -27,7 +28,12 @@ class _PackagePageState extends State<PackagePage>
       floatingActionButton: FloatingActionButton(
         foregroundColor: AppColors.bigTextColor,
         backgroundColor: AppColors.buttonBackground2,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => OrderPage()),
+          );
+        },
         child: const Icon(Icons.payment),
       ),
       body: SingleChildScrollView(

@@ -11,7 +11,21 @@ class FirestoreServices {
   final CollectionReference order =
       FirebaseFirestore.instance.collection('orders');
 
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
+
   User? user = FirebaseAuth.instance.currentUser;
+
+  Future<DocumentSnapshot?> getUserById(String userId) async {
+    try {
+      // Fetch the user from Firebase Authentication using their user ID
+      DocumentSnapshot? user = await users.doc(userId).get();
+      return user;
+    } catch (e) {
+      print('Error fetching user: $e');
+      return null;
+    }
+  }
 
   //PKG ID
   String generatePackageID() {
