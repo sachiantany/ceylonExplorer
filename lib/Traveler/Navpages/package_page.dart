@@ -1,5 +1,6 @@
 import 'package:ceylon_explorer/Pages/login_page.dart';
 import 'package:ceylon_explorer/Services/firestore.dart';
+import 'package:ceylon_explorer/Traveler/Navpages/package_booking.dart';
 import 'package:ceylon_explorer/misc/colors.dart';
 import 'package:ceylon_explorer/widgets/app_large_text.dart';
 import 'package:ceylon_explorer/widgets/app_text.dart';
@@ -7,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PackagePage extends StatefulWidget {
   const PackagePage({Key? key}) : super(key: key);
@@ -17,8 +19,6 @@ class PackagePage extends StatefulWidget {
 
 class _PackagePageState extends State<PackagePage>
     with TickerProviderStateMixin {
-  final FirestoreServices firestoreServices = FirestoreServices();
-
   @override
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 3, vsync: this);
@@ -113,65 +113,7 @@ class _PackagePageState extends State<PackagePage>
                 child: TabBarView(
                   controller: tabController,
                   children: [
-                    StreamBuilder<QuerySnapshot>(
-                        stream: firestoreServices.getPackageStream(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            List noteList = snapshot.data!.docs;
-
-                            return ListView.builder(
-                                itemCount: noteList.length,
-                                itemBuilder: (context, index) {
-                                  //get each individual doc
-                                  DocumentSnapshot documentSnapshot =
-                                      noteList[index];
-                                  String docID = documentSnapshot.id;
-
-                                  //get note from each node
-                                  Map<String, dynamic> data = documentSnapshot
-                                      .data() as Map<String, dynamic>;
-                                  String packageName = data['packageName'];
-                                  String packageId = data['packageId'];
-                                  String packagePrice = data['price'];
-
-                                  return Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ListTile(
-                                        title: Text(packageId),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text("Package: " + packageName),
-                                            Text("Price: " + packagePrice),
-                                          ],
-                                        ),
-                                        trailing: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IconButton(
-                                              onPressed: () {
-                                                firestoreServices
-                                                    .deletePackage(docID);
-                                              },
-                                              icon: Icon(Icons.card_travel),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Divider(
-                                        // Add a Divider between ListTiles
-                                        color: Colors.grey,
-                                        thickness: 1.0,
-                                      ),
-                                    ],
-                                  );
-                                });
-                          } else {
-                            return Text("No Packages...");
-                          }
-                        }),
+                    PackageBooking(),
                     ListView.builder(
                       itemCount: 10,
                       scrollDirection: Axis.vertical,

@@ -29,6 +29,22 @@ class FirestoreServices {
     return packageID;
   }
 
+  //Order ID
+  String generateOrderID() {
+    // Get the current date in the format YYYY-MM
+    String currentDate =
+        DateTime.now().toLocal().toString().substring(0, 7).replaceAll('-', '');
+
+    // Format the counter with leading zeros
+    Random random = Random();
+    int formattedCounter = random.nextInt(999999) + 100000;
+
+    // Create the package ID
+    String packageID = 'ODR-$currentDate-$formattedCounter';
+
+    return packageID;
+  }
+
   //create data
   Future<void> addPackage(
       String packageName,
@@ -92,4 +108,38 @@ class FirestoreServices {
   }
 
   //package add for payment
+  //create orders
+  Future<void> createOrder(
+      String packageId,
+      String tourGuiderId,
+      String tourType,
+      String placeName,
+      GeoPoint position,
+      DateTime tripDate,
+      String amount,
+      String tCount,
+      String orderStatus) {
+    String generatedOrderID = generateOrderID();
+    return order.add({
+      'orderId': generatedOrderID,
+      'addedBy': user!.uid,
+      'timestamp': Timestamp.now(),
+      'packageId': packageId,
+      'tourGuiderId': tourGuiderId,
+      'tourType': tourType,
+      'placeName': placeName,
+      'position': position,
+      'tripDate': tripDate,
+      'amount': amount,
+      'tCount': tCount,
+      'orderStatus': orderStatus
+    });
+  }
+
+//read orders
+  Stream<QuerySnapshot> getOrderStream() {
+    final orderStream =
+        order.orderBy('timestamp', descending: true).snapshots();
+    return orderStream;
+  }
 }
