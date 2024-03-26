@@ -16,6 +16,21 @@ class OrderPage extends StatefulWidget {
 class _OrderPageState extends State<OrderPage> {
   final FirestoreServices firestoreServices = FirestoreServices();
 
+  String? currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    User? creator = FirebaseAuth.instance.currentUser;
+    // Future<DocumentSnapshot?> documentSnapshot =
+    //     firestoreServices.getUserById(creator!.uid);
+
+    setState(() {
+      currentUser = creator!.uid;
+      print("333333 $currentUser");
+    });
+  }
+
   Future<String?> getGuider(docId) async {
     DocumentSnapshot<Object?>? documentSnapshot =
         await firestoreServices.getUserById(docId);
@@ -37,11 +52,11 @@ class _OrderPageState extends State<OrderPage> {
           SizedBox(
             height: 600,
             child: StreamBuilder<QuerySnapshot>(
-                stream: firestoreServices.getOrderStream(),
+                stream: firestoreServices.setOrderById(currentUser),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     List noteList = snapshot.data!.docs;
-
+                    print("countttt ${noteList.length}");
                     return ListView.builder(
                         itemCount: noteList.length,
                         itemBuilder: (context, index) {
